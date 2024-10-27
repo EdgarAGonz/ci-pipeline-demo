@@ -18,7 +18,10 @@ pipeline {
 
         stage('Run PHP Unit Tests') {
             steps {
-                dir('php') {
+                    dir('php') {
+                    // Otorga permisos de ejecución al archivo phpunit
+                    sh 'chmod +x vendor/bin/phpunit'
+                    // Ejecuta las pruebas
                     sh 'vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml'
                 }
             }
