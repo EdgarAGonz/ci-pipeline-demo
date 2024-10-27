@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <title>PHP Project Documentation</title>
+    <directory>src</directory>
+    <target>docs/php</target>
+</phpdoc>

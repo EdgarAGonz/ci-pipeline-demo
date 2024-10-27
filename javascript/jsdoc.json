@@ -1,0 +1,9 @@
+{
+    "source": {
+        "include": ["calculator.js"],
+        "includePattern": ".js$"
+    },
+    "opts": {
+        "destination": "docs/javascript"
+    }
+}
