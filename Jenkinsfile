@@ -10,38 +10,81 @@ pipeline {
 
         stage('Install PHP Dependencies') {
             steps {
-                sh 'composer install'
+                dir('php') {
+                    sh 'composer install'
+                }
             }
         }
 
         stage('Run PHP Unit Tests') {
             steps {
-                sh 'vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml'
+                dir('php') {
+                    sh 'vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml'
+                }
             }
         }
 
         stage('Run PHP CodeSniffer') {
             steps {
-                sh 'vendor/bin/phpcs --standard=PSR12 src/'
+                dir('php') {
+                    sh 'vendor/bin/phpcs --standard=PSR12 src/'
+                }
             }
         }
 
         stage('Install Python Dependencies') {
             steps {
-                sh 'pip install -r python/requirements.txt'
-                sh 'pip install sphinx'
+                dir('python') {
+                    sh 'pip install -r requirements.txt'
+                }
             }
         }
 
         stage('Run Python Tests') {
             steps {
-                sh 'python -m unittest discover python'
+                dir('python') {
+                    sh 'pytest --junitxml=python-test-results.xml'
+                }
             }
         }
 
-        stage('Generate Documentation') {
+        stage('Install JavaScript Dependencies') {
             steps {
-                sh 'sphinx-build -b html python/docs build/docs'
+                dir('javascript') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Run JavaScript Tests') {
+            steps {
+                dir('javascript') {
+                    sh 'npm test'
+                }
+            }
+        }
+
+        stage('Generate PHP Documentation') {
+            steps {
+                dir('php') {
+                    sh './vendor/bin/phpdoc -c phpdoc.xml'
+                }
+            }
+        }
+
+        stage('Generate JavaScript Documentation') {
+            steps {
+                dir('javascript') {
+                    sh 'jsdoc -c jsdoc.json'
+                }
+            }
+        }
+
+        stage('Generate Python Documentation') {
+            steps {
+                dir('python/docs') {
+                    sh 'sphinx-build -b html . ../../build/docs/python'
+                }
             }
         }
     }
@@ -50,6 +93,7 @@ pipeline {
         always {
             archiveArtifacts artifacts: '**/coverage.xml', allowEmptyArchive: true
             archiveArtifacts artifacts: 'build/docs/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/python-test-results.xml', allowEmptyArchive: true
         }
     }
 }
