@@ -18,7 +18,7 @@ pipeline {
 
         stage('Run PHP Unit Tests') {
             steps {
-                    dir('php') {
+                dir('php') {
                     // Otorga permisos de ejecución al archivo phpunit
                     sh 'chmod +x vendor/bin/phpunit'
                     // Ejecuta las pruebas
@@ -30,6 +30,9 @@ pipeline {
         stage('Run PHP CodeSniffer') {
             steps {
                 dir('php') {
+                    // Otorga permisos de ejecución al archivo phpcs
+                    sh 'chmod +x vendor/bin/phpcs'
+                    // Ejecuta PHP CodeSniffer con el estándar PSR12
                     sh 'vendor/bin/phpcs --standard=PSR12 src/'
                 }
             }
@@ -70,6 +73,8 @@ pipeline {
         stage('Generate PHP Documentation') {
             steps {
                 dir('php') {
+                    // Otorga permisos de ejecución a phpdoc
+                    sh 'chmod +x vendor/bin/phpdoc'
                     sh './vendor/bin/phpdoc -c phpdoc.xml'
                 }
             }
