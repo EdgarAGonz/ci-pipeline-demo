@@ -42,7 +42,10 @@ pipeline {
         stage('Install Python Dependencies') {
             steps {
                 dir('python') {
-                    sh 'pip install -r requirements.txt'
+                    // Crea un entorno virtual en el directorio 'venv'
+                    sh 'python3 -m venv venv'
+                     // Activa el entorno virtual e instala las dependencias
+                    sh '. venv/bin/activate && pip install -r requirements.txt'
                 }
             }
         }
@@ -50,7 +53,7 @@ pipeline {
         stage('Run Python Tests') {
             steps {
                 dir('python') {
-                    sh 'pytest --junitxml=python-test-results.xml'
+                    sh '. venv/bin/activate && pytest --junitxml=python-test-results.xml'
                 }
             }
         }
@@ -92,7 +95,7 @@ pipeline {
         stage('Generate Python Documentation') {
             steps {
                 dir('python/docs') {
-                    sh 'sphinx-build -b html . ../../build/docs/python'
+                    sh '. ../venv/bin/activate && sphinx-build -b html . ../../build/docs/python'
                 }
             }
         }
