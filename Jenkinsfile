@@ -12,6 +12,7 @@ pipeline {
             steps {
                 dir('php') {
                     sh 'composer install'
+                    sh 'composer dump-autoload'
                 }
             }
         }
