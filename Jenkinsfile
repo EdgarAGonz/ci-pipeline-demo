@@ -87,6 +87,7 @@ pipeline {
         stage('Generate JavaScript Documentation') {
             steps {
                 dir('javascript') {
+                    sh 'chmod +x ./node_modules/jest/bin/jest.js'
                     sh 'jsdoc -c jsdoc.json'
                 }
             }
