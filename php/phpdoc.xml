@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpdoc>
-    <phpdocumentor>
-        <title>PHP Project Documentation</title>
-        <files>
+    <title>PHP Project Documentation</title>
+    <parser>
+        <target>docs/php</target>
+        <directories>
             <directory>src</directory>
-        </files>
-        <transformations>
-            <transformation>
-                <target>docs/php</target>
-                <template>responsive</template>
-            </transformation>
-        </transformations>
-    </phpdocumentor>
+        </directories>
+    </parser>
+    <transformer>
+        <target>docs/php</target>
+    </transformer>
 </phpdoc>

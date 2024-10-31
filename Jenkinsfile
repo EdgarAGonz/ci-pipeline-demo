@@ -20,9 +20,7 @@ pipeline {
         stage('Run PHP Unit Tests') {
             steps {
                 dir('php') {
-                    // Otorga permisos de ejecución al archivo phpunit
                     sh 'chmod +x vendor/bin/phpunit'
-                    // Ejecuta las pruebas
                     sh 'vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml'
                 }
             }
@@ -31,9 +29,7 @@ pipeline {
         stage('Run PHP CodeSniffer') {
             steps {
                 dir('php') {
-                    // Otorga permisos de ejecución al archivo phpcs
                     sh 'chmod +x vendor/bin/phpcs'
-                    // Ejecuta PHP CodeSniffer con el estándar PSR12
                     sh 'vendor/bin/phpcs --standard=PSR12 src/'
                 }
             }
@@ -42,9 +38,7 @@ pipeline {
         stage('Install Python Dependencies') {
             steps {
                 dir('python') {
-                    // Crea un entorno virtual en el directorio 'venv'
                     sh 'python3 -m venv venv'
-                    // Activa el entorno virtual e instala las dependencias
                     sh '. venv/bin/activate && pip install -r requirements.txt'
                 }
             }
@@ -77,10 +71,8 @@ pipeline {
         stage('Generate PHP Documentation') {
             steps {
                 dir('php') {
-                    // Otorga permisos de ejecución a phpdoc
                     sh 'chmod +x vendor/bin/phpdoc'
-                    // Escapa el espacio en el nombre del proyecto si es necesario
-                    sh './vendor/bin/phpdoc -c /var/jenkins_home/workspace/Prueba_CI/php/phpdoc.xml'
+                    sh './vendor/bin/phpdoc -c phpdoc.xml'
                 }
             }
         }
