@@ -44,7 +44,7 @@ pipeline {
                 dir('python') {
                     // Crea un entorno virtual en el directorio 'venv'
                     sh 'python3 -m venv venv'
-                     // Activa el entorno virtual e instala las dependencias
+                    // Activa el entorno virtual e instala las dependencias
                     sh '. venv/bin/activate && pip install -r requirements.txt'
                 }
             }
@@ -77,7 +77,7 @@ pipeline {
         stage('Generate PHP Documentation') {
             steps {
                 dir('php') {
-                    / Otorga permisos de ejecución a phpdoc
+                    // Otorga permisos de ejecución a phpdoc
                     sh 'chmod +x vendor/bin/phpdoc'
                     // Escapa el espacio en el nombre del proyecto si es necesario
                     sh './vendor/bin/phpdoc -c /var/jenkins_home/workspace/Prueba\\ CI/php/phpdoc.xml'
