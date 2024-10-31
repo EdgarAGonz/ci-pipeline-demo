@@ -77,9 +77,10 @@ pipeline {
         stage('Generate PHP Documentation') {
             steps {
                 dir('php') {
-                    // Otorga permisos de ejecución a phpdoc
+                    / Otorga permisos de ejecución a phpdoc
                     sh 'chmod +x vendor/bin/phpdoc'
-                    sh './vendor/bin/phpdoc -c phpdoc.xml'
+                    // Escapa el espacio en el nombre del proyecto si es necesario
+                    sh './vendor/bin/phpdoc -c /var/jenkins_home/workspace/Prueba\\ CI/php/phpdoc.xml'
                 }
             }
         }
