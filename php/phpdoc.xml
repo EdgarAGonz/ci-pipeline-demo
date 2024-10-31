@@ -3,10 +3,13 @@
     <title>PHP Project Documentation</title>
     <parser>
         <target>docs/php</target>
-        <directories>
-            <directory>src</directory>
-        </directories>
+        <extensions>php</extensions>
+        <visibility>public, protected, private</visibility>
+        <encoding>UTF-8</encoding>
     </parser>
+    <files>
+        <directory>src</directory>
+    </files>
     <transformer>
         <target>docs/php</target>
     </transformer>
