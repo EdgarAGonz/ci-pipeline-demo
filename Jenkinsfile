@@ -80,7 +80,7 @@ pipeline {
                     // Otorga permisos de ejecución a phpdoc
                     sh 'chmod +x vendor/bin/phpdoc'
                     // Escapa el espacio en el nombre del proyecto si es necesario
-                    sh './vendor/bin/phpdoc -c /var/jenkins_home/workspace/Prueba\\ CI/php/phpdoc.xml'
+                    sh './vendor/bin/phpdoc -c /var/jenkins_home/workspace/Prueba_CI/php/phpdoc.xml'
                 }
             }
         }
