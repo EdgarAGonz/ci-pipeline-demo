@@ -1,79 +1,90 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * phpDocumentor
+ * This file is part of phpDocumentor.
  *
- * PHP Version 5.3
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  *
- * @copyright 2010-2014 Mike van Riel / Naenius (http://www.naenius.com)
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      http://phpdoc.org
+ * @link https://phpdoc.org
  */
 
 namespace phpDocumentor\Descriptor\Tag;
 
+use phpDocumentor\Descriptor\ArgumentDescriptor;
 use phpDocumentor\Descriptor\Collection;
 use phpDocumentor\Descriptor\TagDescriptor;
 
+/**
+ * @api
+ * @package phpDocumentor\AST\Tags
+ */
 class MethodDescriptor extends TagDescriptor
 {
-    protected $methodName = '';
+    /** @var string */
+    private $methodName = '';
 
-    protected $arguments;
+    /** @var Collection<ArgumentDescriptor> */
+    private $arguments;
 
-    protected $response;
+    /** @var ?ReturnDescriptor */
+    private $response;
 
-    public function __construct($name)
+    /** @var bool */
+    private $static;
+
+    public function __construct(string $name)
     {
         parent::__construct($name);
 
-        $this->arguments = new Collection();
+        $this->arguments = Collection::fromClassString(ArgumentDescriptor::class);
     }
 
-    /**
-     * @param string $methodName
-     */
-    public function setMethodName($methodName)
+    public function setMethodName(string $methodName) : void
     {
         $this->methodName = $methodName;
     }
 
-    /**
-     * @return string
-     */
-    public function getMethodName()
+    public function getMethodName() : string
     {
         return $this->methodName;
     }
 
     /**
-     * @param mixed $arguments
+     * @param Collection<ArgumentDescriptor> $arguments
      */
-    public function setArguments($arguments)
+    public function setArguments(Collection $arguments) : void
     {
         $this->arguments = $arguments;
     }
 
     /**
-     * @return mixed
+     * @return Collection<ArgumentDescriptor>
      */
-    public function getArguments()
+    public function getArguments() : Collection
     {
         return $this->arguments;
     }
 
-    /**
-     * @param mixed $response
-     */
-    public function setResponse($response)
+    public function setResponse(?ReturnDescriptor $response) : void
     {
         $this->response = $response;
     }
 
-    /**
-     * @return ReturnDescriptor
-     */
-    public function getResponse()
+    public function getResponse() : ?ReturnDescriptor
     {
         return $this->response;
+    }
+
+    public function setStatic(bool $static) : void
+    {
+        $this->static = $static;
+    }
+
+    public function isStatic() : bool
+    {
+        return $this->static;
     }
 }

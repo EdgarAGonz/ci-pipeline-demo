@@ -4,7 +4,7 @@
 <script type="text/javascript">
     function loadExternalCodeSnippets() {
         Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
-            var src = pre.getAttribute('data-src');
+            var src = pre.getAttribute('data-src').replace( /\\/g, '/');
             var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
             var language = 'php';
 
@@ -33,7 +33,7 @@
                         code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
                     }
                     else {
-                        code.textContent = '✖ Error: File does not exist or is empty';
+                        code.textContent = '✖ Error: File does not exist, is empty or trying to view from localhost';
                     }
                 }
             };
@@ -67,7 +67,9 @@
                         {{ node.namespace|route|raw }} <i class="icon-level-up"></i>
                         {#<a href="" class="pull-right">ClassAssembler &raquo;</a>#}
                     </nav>
+                    {% if project.settings.shouldIncludeSource %}
                     <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+                    {% endif %}
 
                     <h1><small>{{ node.namespace }}</small>{{ node.name }}</h1>
                     <p><em>{{ node.summary }}</em></p>
@@ -228,7 +230,15 @@
                         <dt>See also</dt>
                             {% endif %}
                             {% for tag in tags %}
-                            <dd><a href="{{ tag.link }}"><div class="namespace-wrapper">{{ tag.description }}</div></a></dd>
+                                <dd><a href="{{ (tag.reference|route('url')) ?: tag.link }}"><span class="namespace-wrapper">{{ tag.description ?: tag.reference }}</span></a></dd>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for tagName,tags in node.tags if tagName in ['uses'] %}
+                            {% if loop.first %}
+                                <dt>Uses</dt>
+                            {% endif %}
+                            {% for tag in tags %}
+                                <dd><a href="{{ (tag.reference|route('url')) }}"><span class="namespace-wrapper">{{ tag.description ?: tag.reference }}</span></a></dd>
                             {% endfor %}
                         {% endfor %}
 
@@ -237,13 +247,14 @@
                     </dl>
                     <h2>Tags</h2>
                     <table class="table table-condensed">
-                    {% for tagName,tags in node.tags if tagName not in ['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage'] %}
+                    {% for tagName,tags in node.tags if tagName not in ['link', 'see', 'uses', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage'] %}
                         <tr>
                             <th>
                                 {{ tagName }}
                             </th>
                             <td>
                                 {% for tag in tags %}
+                                    {% if tag.version %}{{ tag.version }}{% endif %}
                                     {{ tag.description|markdown|raw }}
                                 {% endfor %}
                             </td>

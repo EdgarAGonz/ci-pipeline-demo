@@ -21,12 +21,17 @@ class Section
     /**
      * @var StopwatchEvent[]
      */
-    private $events = array();
+    private $events = [];
 
     /**
      * @var float|null
      */
     private $origin;
+
+    /**
+     * @var bool
+     */
+    private $morePrecision;
 
     /**
      * @var string
@@ -36,30 +41,32 @@ class Section
     /**
      * @var Section[]
      */
-    private $children = array();
+    private $children = [];
 
     /**
-     * @param float|null $origin Set the origin of the events in this section, use null to set their origin to their start time
+     * @param float|null $origin        Set the origin of the events in this section, use null to set their origin to their start time
+     * @param bool       $morePrecision If true, time is stored as float to keep the original microsecond precision
      */
-    public function __construct($origin = null)
+    public function __construct(?float $origin = null, bool $morePrecision = false)
     {
-        $this->origin = is_numeric($origin) ? $origin : null;
+        $this->origin = $origin;
+        $this->morePrecision = $morePrecision;
     }
 
     /**
      * Returns the child section.
      *
-     * @param string $id The child section identifier
-     *
-     * @return self|null The child section or null when none found
+     * @return self|null
      */
-    public function get($id)
+    public function get(string $id)
     {
         foreach ($this->children as $child) {
             if ($id === $child->getId()) {
                 return $child;
             }
         }
+
+        return null;
     }
 
     /**
@@ -69,17 +76,17 @@ class Section
      *
      * @return self
      */
-    public function open($id)
+    public function open(?string $id)
     {
-        if (null === $session = $this->get($id)) {
-            $session = $this->children[] = new self(microtime(true) * 1000);
+        if (null === $id || null === $session = $this->get($id)) {
+            $session = $this->children[] = new self(microtime(true) * 1000, $this->morePrecision);
         }
 
         return $session;
     }
 
     /**
-     * @return string The identifier of the section
+     * @return string
      */
     public function getId()
     {
@@ -89,11 +96,9 @@ class Section
     /**
      * Sets the session identifier.
      *
-     * @param string $id The session identifier
-     *
      * @return $this
      */
-    public function setId($id)
+    public function setId(string $id)
     {
         $this->id = $id;
 
@@ -103,15 +108,12 @@ class Section
     /**
      * Starts an event.
      *
-     * @param string $name     The event name
-     * @param string $category The event category
-     *
-     * @return StopwatchEvent The event
+     * @return StopwatchEvent
      */
-    public function startEvent($name, $category)
+    public function startEvent(string $name, ?string $category)
     {
         if (!isset($this->events[$name])) {
-            $this->events[$name] = new StopwatchEvent($this->origin ?: microtime(true) * 1000, $category);
+            $this->events[$name] = new StopwatchEvent($this->origin ?: microtime(true) * 1000, $category, $this->morePrecision, $name);
         }
 
         return $this->events[$name]->start();
@@ -120,11 +122,9 @@ class Section
     /**
      * Checks if the event was started.
      *
-     * @param string $name The event name
-     *
      * @return bool
      */
-    public function isEventStarted($name)
+    public function isEventStarted(string $name)
     {
         return isset($this->events[$name]) && $this->events[$name]->isStarted();
     }
@@ -132,13 +132,11 @@ class Section
     /**
      * Stops an event.
      *
-     * @param string $name The event name
-     *
-     * @return StopwatchEvent The event
+     * @return StopwatchEvent
      *
      * @throws \LogicException When the event has not been started
      */
-    public function stopEvent($name)
+    public function stopEvent(string $name)
     {
         if (!isset($this->events[$name])) {
             throw new \LogicException(sprintf('Event "%s" is not started.', $name));
@@ -150,13 +148,11 @@ class Section
     /**
      * Stops then restarts an event.
      *
-     * @param string $name The event name
-     *
-     * @return StopwatchEvent The event
+     * @return StopwatchEvent
      *
      * @throws \LogicException When the event has not been started
      */
-    public function lap($name)
+    public function lap(string $name)
     {
         return $this->stopEvent($name)->start();
     }
@@ -164,13 +160,11 @@ class Section
     /**
      * Returns a specific event by name.
      *
-     * @param string $name The event name
-     *
-     * @return StopwatchEvent The event
+     * @return StopwatchEvent
      *
      * @throws \LogicException When the event is not known
      */
-    public function getEvent($name)
+    public function getEvent(string $name)
     {
         if (!isset($this->events[$name])) {
             throw new \LogicException(sprintf('Event "%s" is not known.', $name));
@@ -182,7 +176,7 @@ class Section
     /**
      * Returns the events from this section.
      *
-     * @return StopwatchEvent[] An array of StopwatchEvent instances
+     * @return StopwatchEvent[]
      */
     public function getEvents()
     {
