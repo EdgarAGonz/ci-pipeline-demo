@@ -3,7 +3,9 @@
     <title>PHP Project Documentation</title>
     <parser>
         <target>docs/php</target>
-        <extensions>php</extensions>
+        <extensions>
+            <extension>php</extension>
+        </extensions>
         <visibility>public, protected, private</visibility>
         <encoding>UTF-8</encoding>
     </parser>
