@@ -71,7 +71,6 @@ pipeline {
         stage('Generate PHP Documentation') {
             steps {
                 dir('php') {
-                    sh 'mkdir -p ../build/docs/php'
                     sh 'chmod +x vendor/bin/phpdoc'
                     sh './vendor/bin/phpdoc -c phpdoc.xml'
                 }
@@ -81,7 +80,7 @@ pipeline {
         stage('Generate JavaScript Documentation') {
             steps {
                 dir('javascript') {
-                    sh 'mkdir -p ../build/docs/js'
+                    // Otorga permisos de ejecución a jsdoc
                     sh 'chmod +x node_modules/.bin/jsdoc'
                     sh './node_modules/.bin/jsdoc -c jsdoc.json'
                 }
@@ -99,40 +98,9 @@ pipeline {
 
     post {
         always {
-            // Asegura permisos en el directorio de documentación para evitar problemas de copia
-            sh 'chmod -R 755 build/docs/'
-
-            // Archivar los archivos de cobertura y resultados de prueba
             archiveArtifacts artifacts: '**/coverage.xml', allowEmptyArchive: true
             archiveArtifacts artifacts: 'build/docs/**', allowEmptyArchive: true
             archiveArtifacts artifacts: '**/python-test-results.xml', allowEmptyArchive: true
-
-            // Publicar la documentación de PHP
-            publishHTML(target: [
-                reportName: 'PHP Documentation',
-                reportDir: 'build/docs/php',
-                reportFiles: 'index.html',
-                alwaysLinkToLastBuild: true,
-                keepAll: true
-            ])
-
-            // Publicar la documentación de JavaScript
-            publishHTML(target: [
-                reportName: 'JavaScript Documentation',
-                reportDir: 'build/docs/js',
-                reportFiles: 'index.html',
-                alwaysLinkToLastBuild: true,
-                keepAll: true
-            ])
-
-            // Publicar la documentación de Python
-            publishHTML(target: [
-                reportName: 'Python Documentation',
-                reportDir: 'build/docs/python',
-                reportFiles: 'index.html',
-                alwaysLinkToLastBuild: true,
-                keepAll: true
-            ])
         }
     }
 }
