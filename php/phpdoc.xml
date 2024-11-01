@@ -6,7 +6,7 @@
         <extensions>
             <extension>php</extension>
         </extensions>
-        <visibility>public, protected, private</visibility>
+        <visibility>public,protected,private</visibility>
         <encoding>UTF-8</encoding>
     </parser>
     <files>
