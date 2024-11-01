@@ -99,11 +99,15 @@ pipeline {
 
     post {
         always {
+            // Asegura permisos en el directorio de documentación para evitar problemas de copia
+            sh 'chmod -R 755 build/docs/'
+
+            // Archivar los archivos de cobertura y resultados de prueba
             archiveArtifacts artifacts: '**/coverage.xml', allowEmptyArchive: true
             archiveArtifacts artifacts: 'build/docs/**', allowEmptyArchive: true
             archiveArtifacts artifacts: '**/python-test-results.xml', allowEmptyArchive: true
 
-            // Publica la documentación de PHP
+            // Publicar la documentación de PHP
             publishHTML(target: [
                 reportName: 'PHP Documentation',
                 reportDir: 'build/docs/php',
@@ -112,7 +116,7 @@ pipeline {
                 keepAll: true
             ])
 
-            // Publica la documentación de JavaScript
+            // Publicar la documentación de JavaScript
             publishHTML(target: [
                 reportName: 'JavaScript Documentation',
                 reportDir: 'build/docs/js',
@@ -121,7 +125,7 @@ pipeline {
                 keepAll: true
             ])
 
-            // Publica la documentación de Python
+            // Publicar la documentación de Python
             publishHTML(target: [
                 reportName: 'Python Documentation',
                 reportDir: 'build/docs/python',
