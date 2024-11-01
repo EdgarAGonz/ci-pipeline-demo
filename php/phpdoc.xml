@@ -13,6 +13,6 @@
         <directory>src</directory>
     </files>
     <transformer>
-        <target>docs/php</target>
+        <target>build/docs/php</target>
     </transformer>
 </phpdoc>

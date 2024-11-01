@@ -4,6 +4,6 @@
         "includePattern": ".js$"
     },
     "opts": {
-        "destination": "docs/javascript"
+        "destination": "build/docs/js"
     }
 }
