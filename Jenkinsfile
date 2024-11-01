@@ -82,7 +82,7 @@ pipeline {
                 dir('javascript') {
                     // Otorga permisos de ejecución a jsdoc
                     sh 'chmod +x node_modules/.bin/jsdoc'
-                    sh 'node_modules/.bin/jsdoc -c jsdoc.json'
+                    sh './node_modules/.bin/jsdoc -c jsdoc.json'
                 }
             }
         }
