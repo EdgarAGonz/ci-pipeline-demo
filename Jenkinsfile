@@ -80,7 +80,9 @@ pipeline {
         stage('Generate JavaScript Documentation') {
             steps {
                 dir('javascript') {
-                    sh 'jsdoc -c jsdoc.json'
+                    // Otorga permisos de ejecución a jsdoc
+                    sh 'chmod +x node_modules/.bin/jsdoc'
+                    sh 'node_modules/.bin/jsdoc -c jsdoc.json'
                 }
             }
         }
