@@ -80,7 +80,6 @@ pipeline {
         stage('Generate JavaScript Documentation') {
             steps {
                 dir('javascript') {
-                    // Otorga permisos de ejecución a jsdoc
                     sh 'chmod +x node_modules/.bin/jsdoc'
                     sh './node_modules/.bin/jsdoc -c jsdoc.json'
                 }
@@ -101,6 +100,33 @@ pipeline {
             archiveArtifacts artifacts: '**/coverage.xml', allowEmptyArchive: true
             archiveArtifacts artifacts: 'build/docs/**', allowEmptyArchive: true
             archiveArtifacts artifacts: '**/python-test-results.xml', allowEmptyArchive: true
+
+            // Publica la documentación de PHP
+            publishHTML(target: [
+                reportName: 'PHP Documentation',
+                reportDir: 'build/docs/php',
+                reportFiles: 'index.html',
+                alwaysLinkToLastBuild: true,
+                keepAll: true
+            ])
+
+            // Publica la documentación de JavaScript
+            publishHTML(target: [
+                reportName: 'JavaScript Documentation',
+                reportDir: 'build/docs/js',
+                reportFiles: 'index.html',
+                alwaysLinkToLastBuild: true,
+                keepAll: true
+            ])
+
+            // Publica la documentación de Python
+            publishHTML(target: [
+                reportName: 'Python Documentation',
+                reportDir: 'build/docs/python',
+                reportFiles: 'index.html',
+                alwaysLinkToLastBuild: true,
+                keepAll: true
+            ])
         }
     }
 }
