@@ -71,6 +71,7 @@ pipeline {
         stage('Generate PHP Documentation') {
             steps {
                 dir('php') {
+                    sh 'mkdir -p ../build/docs/php'
                     sh 'chmod +x vendor/bin/phpdoc'
                     sh './vendor/bin/phpdoc -c phpdoc.xml'
                 }
@@ -80,6 +81,7 @@ pipeline {
         stage('Generate JavaScript Documentation') {
             steps {
                 dir('javascript') {
+                    sh 'mkdir -p ../build/docs/js'
                     sh 'chmod +x node_modules/.bin/jsdoc'
                     sh './node_modules/.bin/jsdoc -c jsdoc.json'
                 }
